@@ -51,6 +51,46 @@
   fbq('init', 'YOUR_PIXEL_ID');
   fbq('track', 'PageView');
 </script>
+<script>
+  // Define categories and keywords
+  const cookieCategories = {
+    necessary: ["sessionID", "csrfToken", "authToken"],
+    functional: ["siteLanguage", "theme"],
+    analytics: ["_ga", "_gid", "pageLoadTime", "resourceCache"],
+    marketing: ["adPreference", "retargetUser", "fbq", "YOUR_PIXEL_ID"]
+  };
+
+  function detectCookies() {
+    const allCookies = document.cookie.split(";").map(c => c.trim());
+    const detected = {
+      necessary: [],
+      functional: [],
+      analytics: [],
+      marketing: [],
+      others: []
+    };
+
+    allCookies.forEach(cookie => {
+      let matched = false;
+      for (const category in cookieCategories) {
+        cookieCategories[category].forEach(keyword => {
+          if (cookie.startsWith(keyword + "=")) {
+            detected[category].push(cookie);
+            matched = true;
+          }
+        });
+      }
+      if (!matched) {
+        detected.others.push(cookie);
+      }
+    });
+
+    console.log("Detected Cookies by Category:", detected);
+  }
+
+  // Run detection after page load
+  window.onload = detectCookies;
+</script>
 
   
 </head>
